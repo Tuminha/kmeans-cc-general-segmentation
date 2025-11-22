@@ -28,7 +28,7 @@ kmeans-cc-general-segmentation/
 │   └── reports/           # Visualizations and briefs
 ├── notebooks/
 │   ├── 00_get_data.ipynb          ✅ Complete
-│   ├── 01_eda_preprocess.ipynb    🔄 In progress
+│   ├── 01_eda_preprocess.ipynb    ✅ Complete
 │   ├── 02_k_selection_silhouette_ch_db.ipynb
 │   ├── 03_fit_kmeans_and_profile.ipynb
 │   ├── 04_stability_and_minibatch.ipynb
@@ -40,11 +40,39 @@ kmeans-cc-general-segmentation/
 ## Deliverables
 
 - ✅ **Notebook 00**: Data download from Kaggle (complete)
-- **Notebook 01**: EDA and preprocessing (in progress)
+- ✅ **Notebook 01**: EDA and preprocessing (complete)
 - **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote
 - **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar)
 - **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison
 - **Notebook 05**: PCA/UMAP 2D plots and a one-page brief in `artifacts/reports/`
+
+## Preprocessing Results (Notebook 01)
+
+### Data Cleaning Pipeline
+1. **Outlier Clipping**: Winsorized at 1st and 99th percentiles
+2. **Log Transformation**: Applied `log1p()` to all numeric features to handle right-skewed distributions
+3. **Missing Value Imputation**: Median imputation for all features
+
+### Key Findings
+
+**Skewness Reduction** (critical for K-Means clustering):
+- **MINIMUM_PAYMENTS**: 13.62 → 0.36 (97% reduction) ✅
+- **PURCHASES**: 8.14 → -0.78 (excellent improvement) ✅
+- **ONEOFF_PAYMENTS**: 10.05 → 0.18 (98% reduction) ✅
+
+**Skewness Interpretation**:
+- **Before cleaning**: Multiple features with extreme skewness (>5.0), making them unsuitable for K-Means
+- **After cleaning**: All features now have skewness between -1.0 and +1.0, with most in the excellent range (-0.5 to +0.5)
+- **Result**: Data is now well-suited for K-Means clustering, which assumes spherical clusters
+
+**Missing Values**:
+- `MINIMUM_PAYMENTS`: Most missing values (>3% of dataset)
+- All missing values handled via median imputation after transformation
+
+### Quality Checks
+- ✅ No missing values remain after cleaning
+- ✅ All features have acceptable skewness for clustering
+- ✅ Data standardized and ready for K-Means
 
 ## How to run
 

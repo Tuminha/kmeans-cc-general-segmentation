@@ -74,6 +74,31 @@ kmeans-cc-general-segmentation/
 - ✅ All features have acceptable skewness for clustering
 - ✅ Data standardized and ready for K-Means
 
+### Correlation Analysis
+
+The correlation heatmap reveals important relationships between features that inform clustering decisions:
+
+**Strong Positive Correlations** (indicating feature groups):
+- **Purchase-related features**: `PURCHASES`, `ONEOFF_PURCHASES`, `INSTALLMENTS_PURCHASES`, `PURCHASES_FREQUENCY`, and `PURCHASES_TRX` are highly correlated (0.8-0.9), suggesting customers who engage in one type of purchase behavior tend to engage in others.
+- **Cash Advance features**: `CASH_ADVANCE`, `CASH_ADVANCE_FREQUENCY`, and `CASH_ADVANCE_TRX` show strong positive correlations (0.7-0.8), indicating a distinct customer segment.
+- **Balance and Credit**: `BALANCE` and `CREDIT_LIMIT` correlate at 0.53, showing that higher credit limits often correspond to higher outstanding balances.
+
+**Weak/Negative Correlations** (indicating distinct segments):
+- **Cash Advance vs. Purchases**: Weak negative correlation (-0.05) suggests customers who use cash advances are a different segment from frequent purchasers.
+- **Payment behavior**: `PRC_FULL_PAYMENT` shows negative correlation with `BALANCE` (-0.32), indicating customers who pay in full tend to have lower balances.
+
+**Clustering Implications**:
+- High correlations suggest potential redundancy, which could benefit from dimensionality reduction (PCA) in future iterations.
+- Distinct correlation blocks (purchase-related vs. cash advance-related) hint at natural customer segments that K-Means should discover.
+
+<div align="center">
+
+<img src="images/correlation_heatmap.png" alt="Correlation Heatmap of Credit Card Features" width="800" />
+
+*Correlation heatmap showing relationships between 18 credit card usage features*
+
+</div>
+
 ## How to run
 
 1) `pip install -r requirements.txt`

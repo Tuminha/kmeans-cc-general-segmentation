@@ -31,7 +31,7 @@ kmeans-cc-general-segmentation/
 │   ├── 01_eda_preprocess.ipynb    ✅ Complete
 │   ├── 02_k_selection_silhouette_ch_db.ipynb    ✅ Complete
 │   ├── 03_fit_kmeans_and_profile.ipynb    ✅ Complete
-│   ├── 04_stability_and_minibatch.ipynb
+│   ├── 04_stability_and_minibatch.ipynb    ✅ Complete
 │   └── 05_pca_visualize_and_brief.ipynb
 ├── src/                   # Utility modules
 └── tests/                 # Test plans
@@ -43,7 +43,7 @@ kmeans-cc-general-segmentation/
 - ✅ **Notebook 01**: EDA and preprocessing (complete)
 - ✅ **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote (complete)
 - ✅ **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar) (complete)
-- **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison
+- ✅ **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison (complete)
 - **Notebook 05**: PCA/UMAP 2D plots and a one-page brief in `artifacts/reports/`
 
 ## Preprocessing Results (Notebook 01)
@@ -193,6 +193,65 @@ With k=3, we expect to discover three distinct customer segments:
 </div>
 
 **Detailed Cluster Analysis**: See `artifacts/reports/cluster_profiles_analysis.md` for comprehensive business insights and actionable strategies for each segment.
+
+## Stability and Performance Analysis (Notebook 04)
+
+### Bootstrap Stability: Excellent Cluster Robustness
+
+**Method**: 20 bootstrap resamples (80% of data each) to test cluster stability
+
+**Results:**
+- **Mean ARI**: 0.966 (excellent stability)
+- **Std ARI**: 0.020 (low variance)
+- **Range**: 0.906 to 0.988
+
+**Interpretation:**
+- ✅ **Very high stability** - Clusters remain consistent across bootstrap samples
+- ✅ **Low variance** - Small standard deviation indicates reliable clustering
+- ✅ **Production-ready** - High stability means the model can be trusted for business decisions
+
+**Business Implication:**
+The clustering is robust to small data variations, meaning customer segments will remain stable over time. This validates that the k=3 segmentation is reliable for long-term use.
+
+<div align="center">
+
+<img src="images/bootstrap_stability.png" alt="Bootstrap Stability Analysis" width="800" />
+
+*Bootstrap ARI distribution showing excellent cluster stability (mean: 0.966). Box plot (left) and violin plot (right) demonstrate consistent clustering across 20 bootstrap samples.*
+
+</div>
+
+### MiniBatchKMeans vs Full KMeans Comparison
+
+**Performance Comparison:**
+
+| Method | Fit Time (s) | Inertia | ARI vs Reference | Quality |
+|--------|--------------|---------|------------------|---------|
+| **Full KMeans** | 0.0087 | 94,422 | 1.000 | ✅ Perfect |
+| **MiniBatchKMeans** | 0.0192 | 95,862 | 0.643 | ⚠️ Significant loss |
+
+**Key Findings:**
+
+1. **Speed**: MiniBatchKMeans is actually **2.2x slower** (0.46x faster = slower)
+   - **Why**: Dataset is small (8,950 samples) - MiniBatch overhead not worth it
+   - **Insight**: MiniBatchKMeans benefits larger datasets (>100k samples)
+
+2. **Quality**: **Significant quality loss** (ARI: 0.357 difference)
+   - Full KMeans: Perfect match with reference (ARI = 1.000)
+   - MiniBatchKMeans: Only 64% agreement (ARI = 0.643)
+   - **Interpretation**: MiniBatch produces different cluster assignments
+
+3. **Inertia**: Similar (1.5% difference)
+   - Both methods achieve similar compactness
+   - But cluster assignments differ significantly
+
+**Recommendation:**
+- ✅ **Use Full KMeans** for this dataset size
+- ⚠️ MiniBatchKMeans not recommended - slower and lower quality
+- 💡 MiniBatchKMeans would be beneficial for datasets >100k samples
+
+**Takeaway:**
+For small-to-medium datasets (<10k samples), full KMeans is both faster and more accurate. MiniBatchKMeans is optimized for very large datasets where full KMeans becomes computationally expensive.
 
 ## How to run
 

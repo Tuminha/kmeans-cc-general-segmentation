@@ -30,7 +30,7 @@ kmeans-cc-general-segmentation/
 │   ├── 00_get_data.ipynb          ✅ Complete
 │   ├── 01_eda_preprocess.ipynb    ✅ Complete
 │   ├── 02_k_selection_silhouette_ch_db.ipynb    ✅ Complete
-│   ├── 03_fit_kmeans_and_profile.ipynb
+│   ├── 03_fit_kmeans_and_profile.ipynb    ✅ Complete
 │   ├── 04_stability_and_minibatch.ipynb
 │   └── 05_pca_visualize_and_brief.ipynb
 ├── src/                   # Utility modules
@@ -42,7 +42,7 @@ kmeans-cc-general-segmentation/
 - ✅ **Notebook 00**: Data download from Kaggle (complete)
 - ✅ **Notebook 01**: EDA and preprocessing (complete)
 - ✅ **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote (complete)
-- **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar)
+- ✅ **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar) (complete)
 - **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison
 - **Notebook 05**: PCA/UMAP 2D plots and a one-page brief in `artifacts/reports/`
 
@@ -138,6 +138,61 @@ With k=3, we expect to discover three distinct customer segments:
 </div>
 
 **Detailed Explanation**: See `artifacts/reports/k_selection_metrics_explanation.md` for a comprehensive guide to understanding each metric.
+
+## Cluster Profiles and Analysis (Notebook 03)
+
+### Final Model: K-Means with k=3
+
+**Model Status:**
+- ✅ Model trained and saved to `artifacts/models/kmeans.joblib`
+- ✅ All 8,950 customers labeled with cluster assignments
+- ✅ Cluster sizes: Balanced distribution (32-36% each)
+
+### Discovered Customer Segments
+
+**Cluster 0: "High-Value Active Spenders" (3,218 customers - 36%)**
+- Highest purchase activity (z-score: +0.81)
+- High one-off purchases (z-score: +0.82)
+- Above-average balances and payments
+- **Strategy**: Premium rewards, credit limit increases
+- **Risk**: Medium - monitor for over-extension
+
+**Cluster 1: "Low-Balance Full Payers" (2,897 customers - 32%)**
+- Lowest balances (z-score: -1.02)
+- Highest full payment rate (z-score: +0.41)
+- Low minimum payments (z-score: -0.77)
+- **Strategy**: Encourage usage with rewards, respect conservative behavior
+- **Risk**: Low - responsible users
+
+**Cluster 2: "High-Balance Low Spenders" (2,835 customers - 32%)**
+- Highest balances (z-score: +0.54)
+- Lowest purchases (z-score: -1.16)
+- Rarely pays in full (z-score: -0.42)
+- **Strategy**: ⚠️ **Priority risk management** - debt assistance, payment plans
+- **Risk**: **High** - potential default risk
+
+### Cluster Quality Validation
+
+**Silhouette Score Analysis:**
+- **Overall Mean**: 0.230 (moderate clustering quality)
+- **Cluster 0**: 0.186 (moderate distinctness)
+- **Cluster 1**: 0.157 (most fragile - least distinct)
+- **Cluster 2**: 0.354 (most cohesive - well-separated)
+
+**Interpretation:**
+- Cluster 2 is the most well-defined segment (high-risk customers with clear behavior pattern)
+- Cluster 1 is the most fragile, suggesting it may contain sub-segments that could benefit from further segmentation
+- Overall clustering quality is acceptable for business decision-making
+
+<div align="center">
+
+<img src="images/silhouette_scores.png" alt="Silhouette Score Distribution by Cluster" width="800" />
+
+*Silhouette score distributions: Overall histogram (left) and per-cluster violin plots (right). Cluster 2 shows highest cohesion (0.354), while Cluster 1 is most fragile (0.157).*
+
+</div>
+
+**Detailed Cluster Analysis**: See `artifacts/reports/cluster_profiles_analysis.md` for comprehensive business insights and actionable strategies for each segment.
 
 ## How to run
 

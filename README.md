@@ -29,7 +29,7 @@ kmeans-cc-general-segmentation/
 ├── notebooks/
 │   ├── 00_get_data.ipynb          ✅ Complete
 │   ├── 01_eda_preprocess.ipynb    ✅ Complete
-│   ├── 02_k_selection_silhouette_ch_db.ipynb
+│   ├── 02_k_selection_silhouette_ch_db.ipynb    ✅ Complete
 │   ├── 03_fit_kmeans_and_profile.ipynb
 │   ├── 04_stability_and_minibatch.ipynb
 │   └── 05_pca_visualize_and_brief.ipynb
@@ -41,7 +41,7 @@ kmeans-cc-general-segmentation/
 
 - ✅ **Notebook 00**: Data download from Kaggle (complete)
 - ✅ **Notebook 01**: EDA and preprocessing (complete)
-- **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote
+- ✅ **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote (complete)
 - **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar)
 - **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison
 - **Notebook 05**: PCA/UMAP 2D plots and a one-page brief in `artifacts/reports/`
@@ -98,6 +98,46 @@ The correlation heatmap reveals important relationships between features that in
 *Correlation heatmap showing relationships between 18 credit card usage features*
 
 </div>
+
+## K Selection Results (Notebook 02)
+
+### Optimal k: **3 clusters**
+
+We evaluated k values from 2 to 12 using four complementary metrics:
+
+**Metrics Used:**
+1. **Inertia (WCSS)**: Measures cluster compactness - look for the "elbow"
+2. **Silhouette Score**: Measures how well points fit their clusters (range: -1 to +1, higher is better)
+3. **Calinski-Harabasz Score**: Measures separation-to-compactness ratio (higher is better)
+4. **Davies-Bouldin Score**: Measures cluster distinctness (lower is better)
+
+**Results Summary:**
+- **k=2**: Highest Silhouette (0.26) and Calinski-Harabasz (3,200), but high inertia
+- **k=3**: ✅ **Optimal choice** - Best Davies-Bouldin (1.66), strong Silhouette (0.23), clear inertia elbow
+- **k=6**: Local peak in Silhouette (0.23)
+- **k=8**: Worst Davies-Bouldin score (1.40), indicating overlapping clusters
+
+**Majority Vote Decision:**
+- ✅ Inertia: Elbow at k=3
+- ✅ Silhouette: Strong at k=3 (0.23)
+- ✅ Calinski-Harabasz: High at k=3 (2,700)
+- ✅ Davies-Bouldin: **Best at k=3** (1.66)
+
+**Business Interpretation:**
+With k=3, we expect to discover three distinct customer segments:
+1. **High-value customers**: High purchases and payments
+2. **Cash advance users**: Different spending behavior pattern
+3. **Low-activity customers**: Minimal credit card usage
+
+<div align="center">
+
+<img src="images/metric_vs_k.png" alt="K Selection Metrics Comparison" width="800" />
+
+*Four metrics evaluated across k=2 to k=12: Inertia (elbow method), Silhouette Score, Calinski-Harabasz Score, and Davies-Bouldin Score (inverted)*
+
+</div>
+
+**Detailed Explanation**: See `artifacts/reports/k_selection_metrics_explanation.md` for a comprehensive guide to understanding each metric.
 
 ## How to run
 

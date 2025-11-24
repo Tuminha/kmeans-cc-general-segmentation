@@ -32,7 +32,7 @@ kmeans-cc-general-segmentation/
 │   ├── 02_k_selection_silhouette_ch_db.ipynb    ✅ Complete
 │   ├── 03_fit_kmeans_and_profile.ipynb    ✅ Complete
 │   ├── 04_stability_and_minibatch.ipynb    ✅ Complete
-│   └── 05_pca_visualize_and_brief.ipynb
+│   └── 05_pca_visualize_and_brief.ipynb    ✅ Complete
 ├── src/                   # Utility modules
 └── tests/                 # Test plans
 ```
@@ -44,7 +44,7 @@ kmeans-cc-general-segmentation/
 - ✅ **Notebook 02**: k selection with elbow, Silhouette, CH, DB + majority vote (complete)
 - ✅ **Notebook 03**: trained KMeans model, labeled dataset, profiles (size, spend, z-score radar) (complete)
 - ✅ **Notebook 04**: stability (bootstrapped ARI/Jaccard), MiniBatchKMeans speed/quality comparison (complete)
-- **Notebook 05**: PCA/UMAP 2D plots and a one-page brief in `artifacts/reports/`
+- ✅ **Notebook 05**: PCA 2D visualization and executive brief (complete)
 
 ## Preprocessing Results (Notebook 01)
 
@@ -252,6 +252,78 @@ The clustering is robust to small data variations, meaning customer segments wil
 
 **Takeaway:**
 For small-to-medium datasets (<10k samples), full KMeans is both faster and more accurate. MiniBatchKMeans is optimized for very large datasets where full KMeans becomes computationally expensive.
+
+## PCA Visualization and Executive Brief (Notebook 05)
+
+### 2D Cluster Visualization
+
+**PCA Projection Results:**
+- **Total Variance Explained**: 56.6% (PC1: 34.5%, PC2: 22.1%)
+- **Cluster Separation**: Three distinct regions clearly visible in 2D space
+- **Visual Validation**: Confirms the quality of k=3 segmentation despite dimensionality reduction
+
+**Spatial Distribution:**
+- **Cluster 0 (High-Value Active Spenders)**: Upper-right quadrant — represents active spending dimension
+- **Cluster 1 (Low-Balance Full Payers)**: Lower-middle region — conservative financial behavior
+- **Cluster 2 (High-Balance Low Spenders)**: Left region — distinct risk profile, well-separated
+
+**Key Insight**: The PCA visualization demonstrates clear separation between segments, validating that the clustering captures meaningful customer behavior patterns even when projected to 2D.
+
+<div align="center">
+
+<img src="images/pca_clusters.png" alt="PCA 2D Cluster Visualization" width="800" />
+
+*K-Means clustering visualization in PCA 2D space. Three distinct customer segments are clearly separated, with centroids marked. PC1 explains 34.5% of variance, PC2 explains 22.1% (total: 56.6%).*
+
+</div>
+
+### Executive Brief
+
+A comprehensive one-page executive brief has been generated summarizing all findings:
+
+**Location**: `artifacts/reports/brief.md`
+
+**Contents**:
+- Executive summary with key findings
+- Model selection rationale (k=3 with metrics)
+- Detailed profiles for all three customer segments
+- Actionable business strategies (2-3 per segment)
+- Risk assessment and recommendations
+- Key metrics summary table
+- Long-term strategy recommendations
+
+**Brief Highlights**:
+- ✅ **798 words** of actionable insights
+- ✅ **3 customer segments** with detailed profiles
+- ✅ **9 actionable strategies** (3 per segment)
+- ✅ **Risk prioritization** for immediate action
+- ✅ **Production-ready** recommendations
+
+**Quick Access**: See `artifacts/reports/brief.md` for the complete executive summary suitable for stakeholder presentations.
+
+## Project Summary
+
+### Complete Pipeline
+
+This project demonstrates a **complete, production-ready K-Means clustering pipeline**:
+
+1. ✅ **Data Acquisition**: Automated download from Kaggle
+2. ✅ **Exploratory Analysis**: Correlation analysis, skewness reduction, missing value handling
+3. ✅ **Feature Engineering**: Log transformation, outlier clipping, standardization
+4. ✅ **Model Selection**: Multi-metric evaluation (Silhouette, CH, DB, Inertia) with majority vote
+5. ✅ **Model Training**: Final K-Means with k=3, model persistence
+6. ✅ **Cluster Profiling**: Business-interpretable segments with actionable strategies
+7. ✅ **Stability Validation**: Bootstrap testing confirms production readiness
+8. ✅ **Visualization**: PCA 2D projection for stakeholder communication
+9. ✅ **Documentation**: Executive brief for business decision-making
+
+### Key Achievements
+
+- **Robust Segmentation**: 3 distinct, actionable customer segments
+- **High Stability**: 96.6% bootstrap agreement (excellent reliability)
+- **Balanced Distribution**: 32-36% per segment (no microscopic clusters)
+- **Business Value**: Clear risk prioritization and revenue opportunities
+- **Production Ready**: Validated model suitable for deployment
 
 ## How to run
 
